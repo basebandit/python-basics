@@ -477,46 +477,37 @@ def enrollment_stats(universities):
     return student_enrollment, tuition_fees
 
 
-def mean(a_list):
-    try:
-        return sum(a_list) / len(a_list)
-    except Exception as e:
-        raise Exception(e)
+def mean(values):
+    return sum(values) / len(values)
 
 
-def median(a_list):
-    try:
-        a_list.sort()
-        middle = len(a_list) / 2
-        return a_list[int(middle)]
-    except Exception as e:
-        raise Exception(e)
+def median(values):
+    values.sort()
+    if len(values) % 2 == 1:
+        # The value at the center of the list is the value
+        # whose index is half of the length of the list,
+        # rounded down
+        mid_index = int(len(values) / 2)
+        return values[mid_index]
+    # Otherwise, if the length of the list is even, return
+    # the mean of the two mid values.
+    else:
+        left_mid_index = (len(values) - 1) // 2
+        right_mid_index = (len(values) + 1) // 2
+        return mean([values[left_mid_index], values[right_mid_index]])
 
 
 student_enrollment, tuition_fees = enrollment_stats(universities)
-total_enrollment = sum(student_enrollment)
-total_fees = sum(tuition_fees)
-student_mean = mean(student_enrollment)
-student_median = median(student_enrollment)
-tuition_mean = mean(tuition_fees)
-tuition_median = median(tuition_fees)
-print("********************************************")
-print()
-print(f"Total students:    {total_enrollment:,}")
-print()
-print(f"Total tuition:   $ {total_fees:,}")
-print()
-print()
-print(f"Student mean:      {student_mean:,.2f}")
-print()
-print(f"Student median:    {student_median:,}")
-print()
-print()
-print(f"Tuition mean:    $ {tuition_mean:,.2f}")
-print()
-print(f"Tuition median:  $ {tuition_median:,}")
-print()
-print("********************************************")
+
+print("\n")
+print("*****" * 6)
+print(f"Total students:    {sum(student_enrollment):,}")
+print(f"Total tuition:   $ {sum(tuition_fees):,}")
+print(f"\nStudent mean:      {mean(student_enrollment):,.2f}")
+print(f"Student median:    {median(student_enrollment):,}")
+print(f"\nTuition mean:    $ {mean(tuition_fees):,.2f}")
+print(f"Tuition median:  $ {median(tuition_fees):,}")
+print("*****" * 6)
 
 #
 # 9.5 Challenge: Wax Poetic
@@ -573,16 +564,58 @@ prepositions = [
     "within",
 ]
 adverbs = ["curiously", "extravagantly", "tantalizingly", "furiously", "sensuously"]
-random_nouns = [random.choice(nouns) for i in range(3)]
-random_verbs = [random.choice(verbs) for i in range(3)]
-random_adjectives = [random.choice(adjectives) for i in range(3)]
-random_prepositions = [random.choice(prepositions) for i in range(3)]
-random_adverb = random.choice(adverbs)
-print(f"A/An {random_adjectives[0]} {random_nouns[0]}")
-print(
-    f"A/An {random_adjectives[0]} {random_nouns[0]} {random_verbs[0]} {random_prepositions[0]} the {random_adjectives[1]} {random_nouns[1]}"
-)
-print(f"{random_adverb}, the {random_nouns[0]} {random_verbs[1]}")
-print(
-    f"the {random_nouns[1]} {random_verbs[2]} {random_prepositions[1]} a {random_adjectives[2]} {random_nouns[2]}"
-)
+
+
+def make_poem():
+    n1 = random.choice(nouns)
+    n2 = random.choice(nouns)
+    n3 = random.choice(nouns)
+
+    while n1 == n2:
+        n1 = random.choice(nouns)
+    while n1 == n3 or n2 == n3:
+        n3 = random.choice(nouns)
+
+    v1 = random.choice(verbs)
+    v2 = random.choice(verbs)
+    v3 = random.choice(verbs)
+
+    while v1 == v2:
+        v1 = random.choice(verbs)
+    while v1 == v3 or v2 == v3:
+        v3 = random.choice(verbs)
+
+    adj1 = random.choice(adjectives)
+    adj2 = random.choice(adjectives)
+    adj3 = random.choice(adjectives)
+
+    while adj1 == adj2:
+        adj1 = random.choice(adjectives)
+    while adj1 == adj3 or adj2 == adj3:
+        adj3 = random.choice(adjectives)
+
+    prep1 = random.choice(prepositions)
+    prep2 = random.choice(prepositions)
+
+    while prep1 == prep2:
+        prep1 = random.choice(prepositions)
+
+    adverb1 = random.choice(adverbs)
+
+    if "aeiou".find(adj1[0]) != -1:
+        article = "An"
+    else:
+        article = "A"
+
+    poem = (
+        f"{article} {adj1} {n1}\n"
+        f"{article} {adj1} {n1} {v1} {prep1} the {adj2} {n2}\n"
+        f"{adverb1}, the {n1} {v2}\n"
+        f"the {n2} {v3} {prep2} a {adj3} {n3}"
+    )
+
+    return poem
+
+
+poem = make_poem()
+print(poem)
